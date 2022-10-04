@@ -12,24 +12,22 @@ from gi.repository import Gtk as gtk
 
 class LinakTray(LinakController):
     """System tray icon class"""
-    def __init__(self, config=None):
+    def __init__(self):
+        super().__init__()
         self.indicator = self._create_indicator()
-
-        super().__init__(config=config)
-
         self.menu = self._construct_menu()
         self.indicator.set_menu(self.menu)
+        self._set_icon()
 
     @staticmethod
     def run():
         """Run the main loop"""
         gtk.main()
 
-    @staticmethod
-    def _create_indicator():
+    def _create_indicator(self):
         indicator = appindicator.Indicator.new(
             "LinakTray",
-            "icon",
+            self._get_icon_fallback(),
             appindicator.IndicatorCategory.APPLICATION_STATUS,
         )
         indicator.set_status(appindicator.IndicatorStatus.ACTIVE)
@@ -77,7 +75,9 @@ class LinakTray(LinakController):
         separator.show()
         parent.append(separator)
 
-    def _set_icon(self, path):
-        path = self._get_absolute_path(path)
+    def _set_icon(self):
+        path = self._get_icon_path()
+        if path is None:
+            return
         self.indicator.set_icon_theme_path(os.path.dirname(path))
         self.indicator.set_icon_full(os.path.splitext(os.path.basename(path))[0], "Icon")

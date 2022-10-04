@@ -7,4 +7,4 @@ if os.environ.get("DESKTOP_SESSION") == "ubuntu":
 else:
     from linak_tray_qt import LinakTray
 
-LinakTray(config='linaktray.conf').run()
+LinakTray().run()

@@ -7,15 +7,16 @@ from linak_controller import LinakController
 
 class LinakTray(LinakController, QtWidgets.QSystemTrayIcon):
     """System tray icon class"""
-    def __init__(self, config=None):
+    def __init__(self):
         self.qt_app = self._init_qt()
 
         QtWidgets.QSystemTrayIcon.__init__(self)
-        LinakController.__init__(self, config=config)
+        LinakController.__init__(self)
 
         self.menu = self._construct_menu()
         self.setContextMenu(self.menu)
         self.activated.connect(lambda reason: self.action_click(reason, self))
+        self._set_icon()
         self.show()
 
     def run(self):
@@ -56,8 +57,10 @@ class LinakTray(LinakController, QtWidgets.QSystemTrayIcon):
         action_quit = parent.addAction("Quit")
         action_quit.triggered.connect(lambda _: sys.exit())
 
-    def _set_icon(self, path):
-        self.setIcon(QtGui.QIcon(self._get_absolute_path(path)))
+    def _set_icon(self):
+        path = self._get_icon_path()
+        icon = QtGui.QIcon(path) if path else QtGui.QIcon.fromTheme(self._get_icon_fallback())
+        self.setIcon(icon)
 
     @classmethod
     @QtCore.pyqtSlot()

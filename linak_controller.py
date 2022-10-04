@@ -1,38 +1,17 @@
 """Controller class to adjust height of a Linak-based desk"""
-from configparser import ConfigParser
 import os
 from LinakDesk import Desk
+from config import Config
 
 class LinakController:
     """LinakTray control logic"""
-    def __init__(self, config=None):
-        self.desk_mac = None
-        self.positions = {}
-        self.favourites = []
+    def __init__(self):
+        self.desk_mac = Config().get('desk', 'mac')
+        self.positions = {key: int(value) for key, value in Config().items('positions')}
+        self.favourites = Config().options('favourites')
         self.current_position = None
 
-        if config is not None:
-            self._config_read(self._get_absolute_path(config))
-
-    def _config_read(self, path):
-        """Read configuration from file"""
-        config = ConfigParser(allow_no_value=True)
-        config.read(path)
-
-        self.desk_mac = config['desk']['mac']
-
-        self.positions = {}
-        for key in config['positions']:
-            self.positions[key] = int(config['positions'][key])
-
-        self.favourites.clear()
-        for key in config['favourites']:
-            self.favourites.append(key)
-
-        if 'icon' in config['settings']:
-            self._set_icon(config['settings']['icon'])
-
-        if 'get_position_at_startup' in config['settings']:
+        if Config().getboolean('settings', 'get_position_at_startup'):
             self.get_position()
 
     def toggle_favourite(self):
@@ -70,12 +49,13 @@ class LinakController:
             self.get_position()
         return self.current_position
 
-    def _set_icon(self, path):
-        pass
-
-    @classmethod
-    def _get_absolute_path(cls, path):
-        """Find an absolute path to a file or path"""
-        if os.path.isabs(path):
+    @staticmethod
+    def _get_icon_path():
+        path = Config().get('settings', 'icon', fallback=None)
+        if path is None or os.path.isabs(path):
             return path
         return os.path.join(os.path.dirname(os.path.realpath(__file__)), path)
+
+    @staticmethod
+    def _get_icon_fallback():
+        return 'object-flip-vertical-symbolic'
