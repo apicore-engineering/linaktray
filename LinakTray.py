@@ -83,7 +83,10 @@ class LinakTray(QtWidgets.QSystemTrayIcon):
     def _construct_menu(self):
         """Construct a menu from the current configuration"""
         menu = QtWidgets.QMenu()
+        self._construct_menu_toggle(menu)
+        menu.addSeparator()
         self._construct_menu_positions(menu)
+        menu.addSeparator()
         self._construct_menu_quit(menu)
         return menu
 
@@ -93,10 +96,14 @@ class LinakTray(QtWidgets.QSystemTrayIcon):
             action = parent.addAction(key)
             action.triggered.connect(lambda state, position=value: self.set_position(position))
 
+    def _construct_menu_toggle(self, parent):
+        """Create toggle favourite button"""
+        action_toggle = parent.addAction("Toggle")
+        action_toggle.triggered.connect(lambda _: self.toggle_favourite())
+
     @classmethod
     def _construct_menu_quit(cls, parent):
         """Create quit button"""
-        parent.addSeparator()
         action_quit = parent.addAction("Quit")
         action_quit.triggered.connect(lambda _: sys.exit())
 
