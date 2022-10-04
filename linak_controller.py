@@ -11,7 +11,7 @@ class LinakController:
         self.favourites = Config().options('favourites')
         self.current_position = None
 
-        if Config().getboolean('settings', 'get_position_at_startup'):
+        if Config().getboolean('settings', 'get_position_at_startup', fallback=False):
             self.get_position()
 
     def toggle_favourite(self):

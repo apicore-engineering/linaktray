@@ -5,7 +5,7 @@ from config import Config
 
 def _get_gui_type():
     """Detect the GUI type to use"""
-    config = Config().get('settings', 'gui')
+    config = Config().get('settings', 'gui', fallback=None)
     if config in ('gtk', 'qt'):
         return config
     if os.environ.get("DESKTOP_SESSION") in ("ubuntu", "cinnamon"):
