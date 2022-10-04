@@ -1,6 +1,6 @@
 """Controller class to adjust height of a Linak-based desk"""
 import os
-from LinakDesk import Desk
+from linakdesk import Desk
 from config import Config
 
 class LinakController:
