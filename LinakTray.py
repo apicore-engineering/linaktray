@@ -9,12 +9,26 @@ from linak_controller import LinakController
 class LinakTray(LinakController, QtWidgets.QSystemTrayIcon):
     """System tray icon class"""
     def __init__(self, config=None):
+        self.qt_app = self._init_qt()
+
         QtWidgets.QSystemTrayIcon.__init__(self)
         LinakController.__init__(self, config=config)
 
         self.menu = self._construct_menu()
         self.setContextMenu(self.menu)
         self.activated.connect(lambda reason: self.action_click(reason, self))
+        self.show()
+
+    def run(self):
+        """Run main loop"""
+        self.qt_app.exec_()
+
+    @staticmethod
+    def _init_qt():
+        """Initialize the Qt application"""
+        app = QtWidgets.QApplication([])
+        app.setQuitOnLastWindowClosed(False)
+        return app
 
     def _construct_menu(self):
         """Construct a menu from the current configuration"""
@@ -54,10 +68,4 @@ class LinakTray(LinakController, QtWidgets.QSystemTrayIcon):
             tray.toggle_favourite()
 
 
-APP = QtWidgets.QApplication([])
-APP.setQuitOnLastWindowClosed(False)
-LINAKTRAY = LinakTray(
-    config=LinakTray.get_relative_path('linaktray.conf'),
-)
-LINAKTRAY.show()
-APP.exec_()
+LinakTray(config='linaktray.conf').run()
