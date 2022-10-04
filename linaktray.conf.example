@@ -1,15 +1,16 @@
 [positions]
-sitting = 1000
-standing = 4200
+sitting = 600
+standing = 4000
 coffee = 0
-top = 6500
+bar = 6500
 
 [desk]
 mac = AA:BB:CC:DD:EE:FF
 
 [settings]
 icon = icon-light.png
-get_position_at_startup
+get_position_at_startup = False
+gui = default
 
 [favourites]
 sitting
