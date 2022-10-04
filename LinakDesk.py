@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 """Module to control a Linak Desk over Bluetooth"""
 import struct
 import threading
@@ -104,7 +105,8 @@ class Desk:
         """Update the speed of the desk from raw data"""
         self.speed = struct.unpack('H', data[2:4])[0] & 0xFFF
 
-    def _command(self, data):
+    @staticmethod
+    def _command(data):
         """Pack a given command to bytes for transmission"""
         return struct.pack('<H', data)
 
