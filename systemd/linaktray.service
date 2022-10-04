@@ -1,0 +1,13 @@
+[Unit]
+Description=LinakTray desk height manager
+After=bluetooth.service
+
+[Service]
+ExecStart=/usr/bin/env python3 -u %h/bin/linaktray/linaktray.py
+WorkingDirectory=%h/bin/linaktray
+Restart=on-failure
+TimeoutStopSec=20
+RestartSec=5
+
+[Install]
+WantedBy=default.target
