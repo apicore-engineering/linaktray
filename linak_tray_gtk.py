@@ -75,9 +75,11 @@ class LinakTray(LinakController):
         separator.show()
         parent.append(separator)
 
-    def _set_icon(self):
-        path = self._get_icon_path()
+    def _set_icon(self, active=False):
+        path = self._get_icon_path(active=active)
         if path is None:
             return
         self.indicator.set_icon_theme_path(os.path.dirname(path))
         self.indicator.set_icon_full(os.path.splitext(os.path.basename(path))[0], "Icon")
+        if active:
+            gtk.main_iteration_do(True)

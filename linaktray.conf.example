@@ -9,6 +9,7 @@ mac = AA:BB:CC:DD:EE:FF
 
 [settings]
 icon = icon-light.png
+icon_active = icon-active.png
 get_position_at_startup = False
 gui = default
 

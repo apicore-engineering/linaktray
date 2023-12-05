@@ -35,13 +35,21 @@ class LinakController:
 
     def set_position(self, position):
         """Set desk position to given value"""
-        print('Moving to position: ' + str(position))
-        self.current_position = Desk(self.desk_mac).oneshot(position)
+        self._set_active(True)
+        try:
+            print('Moving to position: ' + str(position))
+            self.current_position = Desk(self.desk_mac).oneshot(position)
+        finally:
+            self._set_active(False)
 
     def get_position(self):
         """Read desk position from desk"""
-        self.current_position = Desk(self.desk_mac).oneshot_read_info()
-        print('Current position: ' + str(self.current_position))
+        self._set_active(True)
+        try:
+            self.current_position = Desk(self.desk_mac).oneshot_read_info()
+            print('Current position: ' + str(self.current_position))
+        finally:
+            self._set_active(False)
 
     def get_saved_position(self):
         """Return the current position of the desk. Retrieve the data if not present"""
@@ -49,9 +57,15 @@ class LinakController:
             self.get_position()
         return self.current_position
 
+    def _set_active(self, active):
+        self._set_icon(active=active)
+
+    def _set_icon(self, active=False):
+        pass
+
     @staticmethod
-    def _get_icon_path():
-        path = Config().get('settings', 'icon', fallback=None)
+    def _get_icon_path(active=False):
+        path = Config().get('settings', 'icon_active' if active else 'icon', fallback=None)
         if path is None or os.path.isabs(path):
             return path
         return os.path.join(os.path.dirname(os.path.realpath(__file__)), path)

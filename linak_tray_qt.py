@@ -57,8 +57,8 @@ class LinakTray(LinakController, QtWidgets.QSystemTrayIcon):
         action_quit = parent.addAction("Quit")
         action_quit.triggered.connect(lambda _: sys.exit())
 
-    def _set_icon(self):
-        path = self._get_icon_path()
+    def _set_icon(self, active=False):
+        path = self._get_icon_path(active=active)
         icon = QtGui.QIcon(path) if path else QtGui.QIcon.fromTheme(self._get_icon_fallback())
         self.setIcon(icon)
 
